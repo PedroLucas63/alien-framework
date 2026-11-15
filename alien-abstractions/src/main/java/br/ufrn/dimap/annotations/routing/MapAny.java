@@ -1,0 +1,13 @@
+package br.ufrn.dimap.annotations.routing;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+@MapRoute
+public @interface MapAny {
+    String value() default "";
+}

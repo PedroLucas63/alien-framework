@@ -10,6 +10,10 @@
     <packaging>pom</packaging>
     <modules>
         <module>alien-http</module>
+        <module>alien-abstractions</module>
+        <module>alien-core</module>
+        <module>alien-service-discovery</module>
+        <module>alien-api-gateway</module>
     </modules>
 
     <properties>
