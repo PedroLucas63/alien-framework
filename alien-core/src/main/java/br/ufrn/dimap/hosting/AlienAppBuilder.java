@@ -5,6 +5,7 @@ import br.ufrn.dimap.configuration.ConfigurationManager;
 import br.ufrn.dimap.configuration.IConfiguration;
 import br.ufrn.dimap.configuration.IConfigurationSource;
 import br.ufrn.dimap.configuration.sources.InternalConfigurationSource;
+import br.ufrn.dimap.discovery.AssemblyDiscovery;
 import br.ufrn.dimap.dependency_injection.IInversionOfControl;
 import br.ufrn.dimap.dependency_injection.IServiceScopeFactory;
 import br.ufrn.dimap.factories.HttpResponseFactory;
@@ -90,6 +91,16 @@ public class AlienAppBuilder implements IAlienAppBuilder {
         addHostedServices(PassivateHosted.class);
 
         configurationManager.addSource(new InternalConfigurationSource());
+        registerCallerPackage();
+    }
+
+    private static void registerCallerPackage() {
+        StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE)
+                .walk(frames -> frames
+                        .map(StackWalker.StackFrame::getDeclaringClass)
+                        .filter(type -> !AlienAppBuilder.class.isAssignableFrom(type))
+                        .findFirst())
+                .ifPresent(AssemblyDiscovery::registerPackage);
     }
 
     @Override

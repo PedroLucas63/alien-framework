@@ -4,10 +4,10 @@ import java.util.Optional;
 
 public enum HttpVersion {
     Http0_9("HTTP/0.9"),
-    Http1_0("HTTP/0.9"),
-    Http1_1("HTTP/0.9"),
-    Http2("HTTP/0.9"),
-    Http3("HTTP/0.9");
+    Http1_0("HTTP/1.0"),
+    Http1_1("HTTP/1.1"),
+    Http2("HTTP/2"),
+    Http3("HTTP/3");
 
     private final String value;
 
