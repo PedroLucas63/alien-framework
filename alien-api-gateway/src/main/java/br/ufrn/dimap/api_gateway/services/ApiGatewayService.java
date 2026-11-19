@@ -123,7 +123,7 @@ public class ApiGatewayService implements IApiGatewayService {
                 EndpointDescriptor descriptor = new EndpointDescriptor(
                         null,
                         pathPattern,
-                        ApiGatewayService.class,
+                        IApiGatewayService.class,
                         routeMethod,
                         List.of(routeMethod.getParameters()),
                         List.of()
@@ -141,9 +141,9 @@ public class ApiGatewayService implements IApiGatewayService {
 
     private static Method resolveRouteMethod() {
         try {
-            return ApiGatewayService.class.getMethod("route", HttpContext.class);
+            return IApiGatewayService.class.getMethod("route", HttpContext.class);
         } catch (NoSuchMethodException e) {
-            throw new IllegalStateException("Could not locate ApiGatewayService#route(HttpContext)", e);
+            throw new IllegalStateException("Could not locate IApiGatewayService#route(HttpContext)", e);
         }
     }
 }

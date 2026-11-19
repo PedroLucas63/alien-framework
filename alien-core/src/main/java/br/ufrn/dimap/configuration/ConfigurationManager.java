@@ -121,7 +121,12 @@ public class ConfigurationManager implements IConfiguration {
         try {
             T object = type.getDeclaredConstructor().newInstance();
 
-            for (var field : type.getDeclaredFields()) {
+            List<java.lang.reflect.Field> fields = new ArrayList<>();
+            for (Class<?> current = type; current != null && current != Object.class; current = current.getSuperclass()) {
+                fields.addAll(Arrays.asList(current.getDeclaredFields()));
+            }
+
+            for (var field : fields) {
                 int modifiers = field.getModifiers();
                 if (Modifier.isStatic(modifiers) || Modifier.isFinal(modifiers)) {
                     continue;

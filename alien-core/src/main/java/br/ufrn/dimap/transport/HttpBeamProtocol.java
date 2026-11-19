@@ -68,7 +68,8 @@ public class HttpBeamProtocol implements IBeamProtocol {
                     context.response.getBodyStream().close();
                 }
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
         }
     }
 

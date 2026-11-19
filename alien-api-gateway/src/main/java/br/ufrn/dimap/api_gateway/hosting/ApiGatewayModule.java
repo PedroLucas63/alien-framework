@@ -14,6 +14,7 @@ import br.ufrn.dimap.hosting.IAlienAppBuilder;
 import br.ufrn.dimap.hosting.IAlienModule;
 import br.ufrn.dimap.options.HttpMessageOptions;
 import br.ufrn.dimap.serializers.JsonBodySerializer;
+import br.ufrn.dimap.serializers.TextBodySerializer;
 import br.ufrn.dimap.service_discovery.configs.ServiceDiscoveryConfig;
 import br.ufrn.dimap.service_discovery.transport.IDiscoveryProtocol;
 import br.ufrn.dimap.types.HttpVersion;
@@ -40,7 +41,7 @@ public class ApiGatewayModule implements IAlienModule {
                 redirectProtocolType,
                 HttpMessageOptions.builder()
                         .withVersion(HttpVersion.Http1_1)
-                        .withBodySerializers(List.of(new JsonBodySerializer()))
+                        .withBodySerializers(List.of(new TextBodySerializer(), new JsonBodySerializer()))
                         .build()
         );
     }

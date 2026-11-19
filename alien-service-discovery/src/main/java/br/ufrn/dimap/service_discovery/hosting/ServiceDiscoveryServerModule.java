@@ -7,6 +7,7 @@ import br.ufrn.dimap.hosting.IAlienAppBuilder;
 import br.ufrn.dimap.hosting.IAlienModule;
 import br.ufrn.dimap.options.HttpMessageOptions;
 import br.ufrn.dimap.serializers.JsonBodySerializer;
+import br.ufrn.dimap.serializers.TextBodySerializer;
 import br.ufrn.dimap.service_discovery.configs.ServiceDiscoveryServerConfig;
 import br.ufrn.dimap.service_discovery.controllers.IServicesController;
 import br.ufrn.dimap.service_discovery.controllers.ServicesController;
@@ -27,7 +28,7 @@ public class ServiceDiscoveryServerModule implements IAlienModule {
     public ServiceDiscoveryServerModule() {
         this(HttpMessageOptions.builder()
                 .withVersion(HttpVersion.Http1_1)
-                .withBodySerializers(List.of(new JsonBodySerializer()))
+                .withBodySerializers(List.of(new TextBodySerializer(), new JsonBodySerializer()))
                 .build());
     }
 

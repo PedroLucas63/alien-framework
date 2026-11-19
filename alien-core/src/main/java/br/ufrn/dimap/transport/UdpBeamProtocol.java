@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.util.Arrays;
 
 public class UdpBeamProtocol implements IBeamProtocol {
     private final IBeamDispatcher dispatcher;
@@ -56,26 +57,31 @@ public class UdpBeamProtocol implements IBeamProtocol {
     }
 
     private void processConnection(DatagramPacket packet) {
-        HttpRequest request = null;
         try {
-            request = HttpParser.parseRequest(packet.getData());
-        } catch (IOException ignored) {
-        }
-
-        var context = new HttpContext();
-        context.request = request;
-
-        dispatcher.dispatch(context);
-
-        if (context.response != null) {
+            HttpRequest request = null;
             try {
+                byte[] payload = Arrays.copyOfRange(
+                        packet.getData(),
+                        packet.getOffset(),
+                        packet.getOffset() + packet.getLength()
+                );
+                request = HttpParser.parseRequest(payload);
+            } catch (IOException ignored) {
+            }
+
+            var context = new HttpContext();
+            context.request = request;
+
+            dispatcher.dispatch(context);
+
+            if (context.response != null) {
                 var buffer = HttpMessageSerializer.serialize(context.response);
                 var sendPacket = new DatagramPacket(
                         buffer, buffer.length, packet.getAddress(), packet.getPort());
                 listener.send(sendPacket);
-            } catch (IOException ignored) {
-
             }
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
         }
     }
 

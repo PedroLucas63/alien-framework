@@ -43,7 +43,9 @@ public class ServiceDiscoveryClientHosted implements IHostedService {
 
         try {
             register();
-        } catch (RuntimeException ignored) {
+        } catch (RuntimeException e) {
+            System.err.println("[ServiceDiscoveryClient] Initial registration failed: " + e.getMessage());
+            e.printStackTrace(System.err);
             // Registration will be retried in the background heartbeat loop.
             serviceId = null;
         }
@@ -121,7 +123,8 @@ public class ServiceDiscoveryClientHosted implements IHostedService {
                 serviceId = null;
                 register();
             }
-        } catch (RuntimeException ignored) {
+        } catch (RuntimeException e) {
+            System.err.println("[ServiceDiscoveryClient] Heartbeat/registration error: " + e.getMessage());
             // Transient error: keep current serviceId and retry on next tick.
         }
     }

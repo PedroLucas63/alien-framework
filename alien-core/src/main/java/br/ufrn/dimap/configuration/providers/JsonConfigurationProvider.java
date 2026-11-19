@@ -17,24 +17,32 @@ public class JsonConfigurationProvider implements IConfigurationProvider {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private final File file;
+    private final byte[] bytes;
     private final Map<String, String> configuration = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     public JsonConfigurationProvider(File file) {
         this.file = file;
+        this.bytes = null;
+    }
+
+    public JsonConfigurationProvider(byte[] bytes) {
+        this.file = null;
+        this.bytes = bytes;
     }
 
     @Override
     public void load() {
         configuration.clear();
         try {
-            JsonNode root = MAPPER.readTree(file);
+            JsonNode root = bytes != null ? MAPPER.readTree(bytes) : MAPPER.readTree(file);
             if (root != null && root.isObject()) {
                 for (var entry : root.properties()) {
                     populateConfiguration(entry.getKey(), entry.getValue(), null);
                 }
             }
         } catch (IOException e) {
-            throw new UncheckedIOException("Failed to load JSON configuration from " + file.getPath(), e);
+            String source = file != null ? file.getPath() : "<stream>";
+            throw new UncheckedIOException("Failed to load JSON configuration from " + source, e);
         }
     }
 
