@@ -158,8 +158,8 @@ public class SpawningPoolManager implements IInversionOfControl, IServiceScopeFa
         Class<?> specimenType = serviceKey.type();
 
         Constructor<?> constructor = Arrays.stream(specimenType.getConstructors())
-                .max(Comparator
-                        .comparing((Constructor<?> c) -> c.isAnnotationPresent(ServiceConstructor.class))
+                .min(Comparator
+                        .comparing((Constructor<?> c) -> !c.isAnnotationPresent(ServiceConstructor.class))
                         .thenComparingInt(Constructor::getParameterCount))
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Specimen " + specimenType.getName() + " must have at least one public constructor."
