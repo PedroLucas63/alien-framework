@@ -58,13 +58,25 @@ public class JsonConfigurationSource implements IFileConfigurationSource {
         }
 
         File file = new File(path);
-        if (!file.exists()) {
-            throw new IllegalArgumentException("The path " + path + " does not exist.");
-        }
-        if (!file.getName().toLowerCase(Locale.ROOT).endsWith(EXTENSION)) {
-            throw new IllegalArgumentException("The path " + path + " does not end with the extension " + EXTENSION + ".");
+        if (file.exists()) {
+            if (!file.getName().toLowerCase(Locale.ROOT).endsWith(EXTENSION)) {
+                throw new IllegalArgumentException("The path " + path + " does not end with the extension " + EXTENSION + ".");
+            }
+            return new JsonConfigurationProvider(file);
         }
 
-        return new JsonConfigurationProvider(file);
+        String resourceName = path.replace('\\', '/').replaceFirst("^\\./+", "").replaceFirst("^/+", "");
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        if (classLoader != null && resourceName.toLowerCase(Locale.ROOT).endsWith(EXTENSION)) {
+            try (InputStream stream = classLoader.getResourceAsStream(resourceName)) {
+                if (stream != null) {
+                    return new JsonConfigurationProvider(stream.readAllBytes());
+                }
+            } catch (IOException e) {
+                throw new UncheckedIOException("Failed to read JSON configuration resource: " + resourceName, e);
+            }
+        }
+
+        throw new IllegalArgumentException("The path " + path + " does not exist.");
     }
 }

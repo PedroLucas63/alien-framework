@@ -1,23 +1,25 @@
 package br.ufrn.dimap.types;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.TreeMap;
 
 public class HttpHeaders {
     public final Map<String, String> values;
 
     public HttpHeaders() {
-        this.values = new HashMap<>();
+        this.values = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     }
 
     public HttpHeaders(Map<String, String> values) {
-        this.values = new HashMap<>(values);
+        this.values = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        this.values.putAll(values);
     }
 
     public HttpHeaders(HttpHeaders headers) {
-        this.values = new HashMap<>(headers.values);
+        this.values = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        this.values.putAll(headers.values);
     }
 
     public static HttpHeaders fromHeaders(Map<HttpHeader, String> values) {

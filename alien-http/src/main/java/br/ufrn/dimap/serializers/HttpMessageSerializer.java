@@ -8,7 +8,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
 
 public final class HttpMessageSerializer {
     private HttpMessageSerializer() {
@@ -37,9 +39,20 @@ public final class HttpMessageSerializer {
     }
 
     public static void serialize(HttpRequest request, OutputStream destination) throws IOException {
+        String target = request.getPath();
+        var queryParams = request.getQueryParameters();
+        if (queryParams != null && !queryParams.values.isEmpty()) {
+            String queryString = queryParams.values.entrySet().stream()
+                    .map(e -> URLEncoder.encode(e.getKey(), StandardCharsets.UTF_8)
+                            + "="
+                            + URLEncoder.encode(e.getValue() == null ? "" : e.getValue(), StandardCharsets.UTF_8))
+                    .collect(Collectors.joining("&"));
+            target += (target.contains("?") ? "&" : "?") + queryString;
+        }
+
         String startLine = request.getMethod().getValue()
                 + " "
-                + request.getPath()
+                + target
                 + " "
                 + request.getVersion().getValue();
 

@@ -5,6 +5,7 @@ import br.ufrn.dimap.configuration.ConfigurationManager;
 import br.ufrn.dimap.configuration.IConfiguration;
 import br.ufrn.dimap.configuration.IConfigurationSource;
 import br.ufrn.dimap.configuration.sources.InternalConfigurationSource;
+import br.ufrn.dimap.configuration.sources.JsonConfigurationSource;
 import br.ufrn.dimap.discovery.AssemblyDiscovery;
 import br.ufrn.dimap.dependency_injection.IInversionOfControl;
 import br.ufrn.dimap.dependency_injection.IServiceScopeFactory;
@@ -91,7 +92,16 @@ public class AlienAppBuilder implements IAlienAppBuilder {
         addHostedServices(PassivateHosted.class);
 
         configurationManager.addSource(new InternalConfigurationSource());
+        loadDefaultJsonConfiguration();
         registerCallerPackage();
+    }
+
+    private void loadDefaultJsonConfiguration() {
+        try {
+            configurationManager.addSource(new JsonConfigurationSource("appsettings.json"));
+        } catch (IllegalArgumentException ignored) {
+            // appsettings.json is optional; ignore if absent on disk and in classpath resources.
+        }
     }
 
     private static void registerCallerPackage() {

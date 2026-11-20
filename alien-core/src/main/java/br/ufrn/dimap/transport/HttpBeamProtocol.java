@@ -68,6 +68,8 @@ public class HttpBeamProtocol implements IBeamProtocol {
                     context.response.getBodyStream().close();
                 }
             }
+        } catch (SocketException ignored) {
+            // Client closed the connection before the full response was written.
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }

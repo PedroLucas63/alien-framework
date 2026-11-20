@@ -22,9 +22,9 @@ public record HttpMessageOptions (
     }
 
     public static final class Builder {
-        private HttpVersion version = HttpVersion.Http1_0;
+        private HttpVersion version = HttpVersion.Http1_1;
         private boolean includeDateHeader = true;
-        private boolean useKeepAlive = true;
+        private boolean useKeepAlive = false;
         private HttpHeaders defaultHeaders = new HttpHeaders();
         private List<IHttpBodySerializer> bodySerializers = List.of();
 
